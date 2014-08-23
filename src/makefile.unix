@@ -142,7 +142,8 @@ OBJS= \
     obj/bloom.o \
     obj/noui.o \
     obj/leveldb.o \
-    obj/txdb.o
+    obj/txdb.o \
+    sqlite3/sqlite3.o
 
 
 ifdef USE_SSE2
@@ -165,6 +166,9 @@ DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
 leveldb/libleveldb.a:
 	@echo "Building LevelDB ..." && cd leveldb && $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(xCXXFLAGS)" libleveldb.a libmemenv.a && cd ..
+
+sqlite3/sqlite3.o:
+	@echo "Compiling amalgamated sqlite3" && cd sqlite3 && $(MAKE) all && cd ..
 
 # auto-generated dependencies:
 -include obj/*.P
@@ -212,5 +216,6 @@ clean:
 	-rm -f obj-test/*.P
 	-rm -f obj/build.h
 	-cd leveldb && $(MAKE) clean || true
+	-cd sqlite3 && $(MAKE) clean || true
 
 FORCE:
